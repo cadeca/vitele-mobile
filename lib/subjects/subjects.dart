@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
+import 'package:weasylearn/data/Subject.dart';
+import 'package:weasylearn/subjects/subjectrow.dart';
 
 Future<List<Subject>> fetchSubjects() async {
   final response = await http.get(
@@ -14,33 +18,39 @@ Future<List<Subject>> fetchSubjects() async {
   return subjects;
 }
 
-class Subject {
-
-  final String name;
-  final String code;
-  final String description;
-  final int semester;
-  final int id;
-
-  Subject({this.name, this.code, this.description, this.semester, this.id});
-
-  factory Subject.fromJson(Map<String, dynamic> json) {
-    return Subject(
-      name: json['name'],
-      code: json['code'],
-      description: json['description'],
-      semester: json['semester'],
-      id: json['id']
-    );
+class SubjectsWidget extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _SubjectsWidgetState(subjects: Subject.generateTestData());
   }
 
 }
 
-class Subjects extends StatelessWidget {
+class _SubjectsWidgetState extends State<SubjectsWidget> {
+
+  List<Subject> subjects;
+
+  _SubjectsWidgetState({this.subjects});
 
   @override
   Widget build(BuildContext context) {
-
+    return MaterialApp(
+      title: "Materii",
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("Materiile Mele"),
+        ),
+        body: ListView.builder(
+            itemCount: subjects.length,
+            itemBuilder: (context, index) {
+              final item = subjects[index];
+              return SubjectRow(
+                subject: item,
+              );
+            },
+        ),
+      ),
+    );
   }
 
 }
