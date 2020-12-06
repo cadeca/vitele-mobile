@@ -17,8 +17,7 @@ class Subject {
         description: json['description'],
         semester: json['semester'],
         id: json['id'],
-        teacher: json['teacher'],
-        tutors: json['tutors']
+        teacher: "${json['teacher']['firstName']} ${json['teacher']['lastName']}",
     );
   }
 
