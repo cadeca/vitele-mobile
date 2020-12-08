@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weasylearn/data/Subject.dart';
+import 'package:weasylearn/representation/Subject.dart';
 
 class SubjectRow extends StatelessWidget {
   final Subject subject;
@@ -55,7 +55,7 @@ class SubjectRow extends StatelessWidget {
                 ),
                 Container(height: 10.0),
                 Text(
-                  subject.teacher,
+                  '${subject.teacher.firstName} ${subject.teacher.lastName}',
                   style: subHeaderTextStyle,
                 ),
               ],

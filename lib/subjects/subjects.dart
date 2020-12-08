@@ -5,7 +5,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:weasylearn/data/Subject.dart';
+import 'package:weasylearn/representation/Subject.dart';
+import 'package:weasylearn/subjects/createsubject.dart';
 import 'package:weasylearn/subjects/subjectrow.dart';
 import 'package:weasylearn/utils/fancyappbar.dart';
 
@@ -13,8 +14,9 @@ Future<List<Subject>> fetchSubjects() async {
   final response = await http.get(
     'http://10.0.2.2:2020/api/subject',
     headers: {
-      HttpHeaders.authorizationHeader:
-          base64Encode(utf8.encode("student:student"))
+      HttpHeaders.authorizationHeader: base64Encode(
+        utf8.encode("student:student"),
+      ),
     },
   );
   final Iterable responseJson = jsonDecode(response.body);
@@ -47,6 +49,15 @@ class _SubjectsWidgetState extends State<SubjectsWidget> {
             ),
             _subjectsData(),
           ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CreateSubjectWidget()),
+            );
+          },
         ),
       ),
     );
