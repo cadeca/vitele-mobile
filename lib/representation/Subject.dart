@@ -2,12 +2,12 @@ import 'package:weasylearn/representation/Teacher.dart';
 
 class Subject {
 
-  final String name;
-  final String code;
-  final String description;
-  final Teacher teacher;
-  final int semester;
-  final int id;
+  String name;
+  String code;
+  String description;
+  Teacher teacher;
+  int semester;
+  int id;
 
   Subject({this.name, this.code, this.description, this.semester, this.id, this.teacher});
 

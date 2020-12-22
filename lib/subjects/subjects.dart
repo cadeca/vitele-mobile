@@ -86,7 +86,7 @@ class _SubjectsWidgetState extends State<SubjectsWidget> {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         color: Colors.black87,
-        child: new CustomScrollView(
+        child: CustomScrollView(
           scrollDirection: Axis.vertical,
           slivers: <Widget>[
             SliverPadding(

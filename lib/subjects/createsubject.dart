@@ -1,14 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:weasylearn/representation/Subject.dart';
+import 'package:weasylearn/subjects/subjectnotification.dart';
 import 'package:weasylearn/subjects/teacherRadio.dart';
 import 'package:weasylearn/utils/fancyappbar.dart';
 
 class CreateSubjectWidget extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _CreateSubjectState();
+  State<StatefulWidget> createState() => CreateSubjectState();
 }
 
-class _CreateSubjectState extends State<CreateSubjectWidget> {
+class CreateSubjectState extends State<CreateSubjectWidget> {
+  Subject _subject = Subject();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -60,52 +63,90 @@ class _CreateSubjectState extends State<CreateSubjectWidget> {
   Form _createFormForSubjects() {
     return Form(
       key: _formKey,
-      child: Column(
-        children: [
-          _createTextFormField(
-            labelText: 'Numele materiei',
-            validateText: 'Numele nu poate fi gol!',
-            icon: Icon(Icons.subject),
-          ),
-          _createTextFormField(
-            labelText: 'Codul materiei',
-            validateText: 'Codul nu poate fi gol!',
-            icon: Icon(Icons.code),
-          ),
-          _createTextFormField(
-            labelText: 'Descrierea materiei',
-            validateText: 'Descrierea nu poate fi goala!',
-            icon: Icon(Icons.description),
-          ),
-          FlatButton(
-            child: Text('Selecteaza profesorul'),
-            onPressed: () {
-              showDialog(
-                context: context,
-                child: AlertDialog(
-                  content: TeacherRadio(),
-                  actions: [
-                    FlatButton(
-                      child: Text('Ok'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
+      child: NotificationListener<SubjectNotification>(
+        onNotification: (SubjectNotification notification) {
+          setState(() {
+            this._subject = notification.subject;
+          });
+          return true;
+        },
+        child: Column(
+          children: [
+            _createTextFormField(
+              labelText: 'Numele materiei',
+              validateText: 'Numele nu poate fi gol!',
+              icon: Icon(Icons.subject),
+              onChange: (String value) {
+                setState(() {
+                  _subject.name = value;
+                });
+              },
+            ),
+            _createTextFormField(
+              labelText: 'Codul materiei',
+              validateText: 'Codul nu poate fi gol!',
+              icon: Icon(Icons.code),
+              onChange: (String value) {
+                setState(() {
+                  _subject.code = value;
+                });
+              },
+            ),
+            _createTextFormField(
+              labelText: 'Descrierea materiei',
+              validateText: 'Descrierea nu poate fi goala!',
+              icon: Icon(Icons.description),
+              onChange: (String value) {
+                setState(() {
+                  _subject.description = value;
+                });
+              },
+            ),
+            _subject.teacher != null
+                ? Text(_subject.teacher.UIvalue)
+                : Text(''),
+            FlatButton(
+              color: Colors.grey,
+              child: Text('Selecteaza profesorul'),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  child: AlertDialog(
+                    content: TeacherRadio(
+                      subject: _subject,
+                      parent: this,
                     ),
-                  ],
-                )
-              );
-            },
-          ),
-        ],
+                    actions: [
+                      FlatButton(
+                        child: Text('Ok'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Container _createTextFormField(
-      {String labelText, String validateText, Icon icon}) {
+      {String labelText,
+      String validateText,
+      Icon icon,
+      bool readOnly = false,
+      ValueChanged<String> onChange,
+      String initialValue}) {
     return Container(
       color: Colors.grey,
       child: TextFormField(
+        readOnly: readOnly,
+        initialValue: initialValue,
+        onChanged: onChange,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.only(top: 10, bottom: 10),
           isDense: true,
