@@ -15,7 +15,7 @@ Future<List<Subject>> fetchSubjects() async {
     'http://10.0.2.2:2020/api/subject',
     headers: {
       HttpHeaders.authorizationHeader: base64Encode(
-        utf8.encode("student:student"),
+        utf8.encode("teacher:teacher"),
       ),
     },
   );

@@ -26,5 +26,13 @@ class Subject {
     );
   }
 
-
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'code': code,
+      'description': description,
+      'semester': semester,
+      'teacher': teacher.username,
+    };
+  }
 }

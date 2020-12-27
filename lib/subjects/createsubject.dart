@@ -1,9 +1,15 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart';
 import 'package:weasylearn/representation/Subject.dart';
 import 'package:weasylearn/subjects/subjectnotification.dart';
 import 'package:weasylearn/subjects/teacherRadio.dart';
 import 'package:weasylearn/utils/fancyappbar.dart';
+import 'package:http/http.dart' as http;
 
 class CreateSubjectWidget extends StatefulWidget {
   @override
@@ -37,17 +43,35 @@ class CreateSubjectState extends State<CreateSubjectWidget> {
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.check),
           onPressed: () {
-            if (_formKey.currentState.validate()) {
+            if (_formKey.currentState.validate() && _subject.teacher != null) {
+              final response = _createSubject(_subject);
+              response.whenComplete(
+                () => showDialog(
+                  context: context,
+                  child: AlertDialog(
+                    title: Text('Materie salvata!'),
+                    actions: [
+                      FlatButton(
+                        child: Text('Ok'),
+                        onPressed: () {
+                          Navigator.of(context)
+                              .popUntil((route) => route.isFirst);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            } else {
               showDialog(
                 context: context,
                 child: AlertDialog(
-                  title: Text('Materie salvata!'),
+                  title: Text('Trebuie sa completati toate informatiile!'),
                   actions: [
                     FlatButton(
                       child: Text('Ok'),
                       onPressed: () {
-                        Navigator.of(context)
-                            .popUntil((route) => route.isFirst);
+                        Navigator.of(context).pop();
                       },
                     ),
                   ],
@@ -63,73 +87,100 @@ class CreateSubjectState extends State<CreateSubjectWidget> {
   Form _createFormForSubjects() {
     return Form(
       key: _formKey,
-      child: NotificationListener<SubjectNotification>(
-        onNotification: (SubjectNotification notification) {
-          setState(() {
-            this._subject = notification.subject;
-          });
-          return true;
-        },
-        child: Column(
-          children: [
-            _createTextFormField(
-              labelText: 'Numele materiei',
-              validateText: 'Numele nu poate fi gol!',
-              icon: Icon(Icons.subject),
-              onChange: (String value) {
-                setState(() {
-                  _subject.name = value;
-                });
-              },
-            ),
-            _createTextFormField(
-              labelText: 'Codul materiei',
-              validateText: 'Codul nu poate fi gol!',
-              icon: Icon(Icons.code),
-              onChange: (String value) {
-                setState(() {
-                  _subject.code = value;
-                });
-              },
-            ),
-            _createTextFormField(
-              labelText: 'Descrierea materiei',
-              validateText: 'Descrierea nu poate fi goala!',
-              icon: Icon(Icons.description),
-              onChange: (String value) {
-                setState(() {
-                  _subject.description = value;
-                });
-              },
-            ),
-            _subject.teacher != null
-                ? Text(_subject.teacher.UIvalue)
-                : Text(''),
-            FlatButton(
-              color: Colors.grey,
-              child: Text('Selecteaza profesorul'),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  child: AlertDialog(
-                    content: TeacherRadio(
-                      subject: _subject,
-                      parent: this,
-                    ),
-                    actions: [
-                      FlatButton(
-                        child: Text('Ok'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
+      child: Column(
+        children: [
+          _createTextFormField(
+            labelText: 'Numele materiei',
+            validateText: 'Numele nu poate fi gol!',
+            icon: Icon(Icons.subject),
+            onChange: (String value) {
+              setState(() {
+                _subject.name = value;
+              });
+            },
+          ),
+          _createTextFormField(
+            labelText: 'Codul materiei',
+            validateText: 'Codul nu poate fi gol!',
+            icon: Icon(Icons.code),
+            onChange: (String value) {
+              setState(() {
+                _subject.code = value;
+              });
+            },
+          ),
+          _createTextFormField(
+            labelText: 'Descrierea materiei',
+            validateText: 'Descrierea nu poate fi goala!',
+            icon: Icon(Icons.description),
+            onChange: (String value) {
+              setState(() {
+                _subject.description = value;
+              });
+            },
+          ),
+          Row(
+            children: [
+              Container(
+                color: Colors.grey,
+                padding:
+                    EdgeInsets.only(top: 12, bottom: 12, left: 5, right: 5),
+                child: Icon(Icons.account_box),
+              ),
+              Expanded(
+                child: Container(
+                  color: Colors.grey,
+                  padding:
+                      EdgeInsets.only(top: 20, bottom: 12, right: 10, left: 20),
+                  child: _subject.teacher != null
+                      ? Text(_subject.teacher.UIvalue)
+                      : Text('Niciun profesor selectat'),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  alignment: Alignment.centerRight,
+                  child: FlatButton(
+                    color: Colors.blueGrey,
+                    padding: EdgeInsets.only(
+                        top: 20, bottom: 12, left: 22, right: 20),
+                    child: Text('Selecteaza profesorul'),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        child: AlertDialog(
+                          content: TeacherRadio(
+                            subject: _subject,
+                            parent: this,
+                          ),
+                          actions: [
+                            FlatButton(
+                              child: Text('Ok'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
-          ],
-        ),
+                ),
+              ),
+            ],
+          ),
+          _createTextFormField(
+            labelText: 'Semestrul',
+            validateText: 'Semestrul nu poate fi gol!',
+            icon: Icon(Icons.access_time),
+            onChange: (String value) {
+              setState(() {
+                _subject.semester = int.parse(value);
+              });
+            },
+            keyboardType: TextInputType.number,
+          ),
+        ],
       ),
     );
   }
@@ -140,12 +191,12 @@ class CreateSubjectState extends State<CreateSubjectWidget> {
       Icon icon,
       bool readOnly = false,
       ValueChanged<String> onChange,
-      String initialValue}) {
+      TextInputType keyboardType = TextInputType.text}) {
     return Container(
       color: Colors.grey,
       child: TextFormField(
         readOnly: readOnly,
-        initialValue: initialValue,
+        keyboardType: keyboardType,
         onChanged: onChange,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.only(top: 10, bottom: 10),
@@ -162,7 +213,27 @@ class CreateSubjectState extends State<CreateSubjectWidget> {
           }
           return null;
         },
+        inputFormatters: [
+          keyboardType == TextInputType.number
+              ? FilteringTextInputFormatter.allow(RegExp('[12345678]'))
+              : FilteringTextInputFormatter.singleLineFormatter,
+        ],
       ),
     );
+  }
+
+  Future<Response> _createSubject(Subject subject) async {
+    final response = await http.post(
+      'http://10.0.2.2:2020/api/subject',
+      body: jsonEncode(subject.toJson()),
+      headers: {
+        'Accept': 'application/json',
+        'content-type': 'application/json',
+        HttpHeaders.authorizationHeader: base64Encode(
+          utf8.encode('admin:admin'),
+        ),
+      },
+    );
+    return response;
   }
 }
