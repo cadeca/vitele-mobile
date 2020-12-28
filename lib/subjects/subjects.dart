@@ -6,9 +6,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:weasylearn/representation/Subject.dart';
-import 'package:weasylearn/subjects/createsubject.dart';
+import 'package:weasylearn/subjects/subjectdetails.dart';
 import 'package:weasylearn/subjects/subjectrow.dart';
 import 'package:weasylearn/utils/fancyappbar.dart';
+import 'package:weasylearn/utils/sidedrawer.dart';
 
 Future<List<Subject>> fetchSubjects() async {
   final response = await http.get(
@@ -42,11 +43,21 @@ class _SubjectsWidgetState extends State<SubjectsWidget> {
     return MaterialApp(
       title: "Materii",
       home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.grey,
+          title: Text(
+            'Materii',
+            style: const TextStyle(
+              color: Colors.white,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w600,
+              fontSize: 20.0,
+            ),
+          ),
+        ),
+        drawer: SideDrawer(),
         body: Column(
           children: [
-            FancyAppBar(
-              title: "Materii",
-            ),
             _subjectsData(),
           ],
         ),
@@ -55,7 +66,8 @@ class _SubjectsWidgetState extends State<SubjectsWidget> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => CreateSubjectWidget()),
+              MaterialPageRoute(
+                  builder: (context) => SubjectDetailsWidget(null)),
             );
           },
         ),

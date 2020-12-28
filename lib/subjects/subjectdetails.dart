@@ -6,18 +6,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:weasylearn/representation/Subject.dart';
-import 'package:weasylearn/subjects/subjectnotification.dart';
 import 'package:weasylearn/subjects/teacherRadio.dart';
 import 'package:weasylearn/utils/fancyappbar.dart';
 import 'package:http/http.dart' as http;
+import 'package:weasylearn/utils/sidedrawer.dart';
 
-class CreateSubjectWidget extends StatefulWidget {
+class SubjectDetailsWidget extends StatefulWidget {
+  final Subject _subject;
+
+  SubjectDetailsWidget(this._subject);
+
   @override
-  State<StatefulWidget> createState() => CreateSubjectState();
+  State<StatefulWidget> createState() =>
+      SubjectDetailsState(_subject != null ? _subject : Subject());
 }
 
-class CreateSubjectState extends State<CreateSubjectWidget> {
-  Subject _subject = Subject();
+class SubjectDetailsState extends State<SubjectDetailsWidget> {
+  Subject _subject;
+
+  SubjectDetailsState(this._subject);
 
   final _formKey = GlobalKey<FormState>();
 
@@ -25,11 +32,21 @@ class CreateSubjectState extends State<CreateSubjectWidget> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.grey,
+          title: Text(
+            _subject.id != null ? _subject.code : 'Adauga Materie',
+            style: const TextStyle(
+              color: Colors.white,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w600,
+              fontSize: 20.0,
+            ),
+          ),
+        ),
+        drawer: SideDrawer(),
         body: Column(
           children: [
-            FancyAppBar(
-              title: 'Adauga Materie',
-            ),
             Expanded(
               child: Container(
                 height: MediaQuery.of(context).size.height,
@@ -98,6 +115,7 @@ class CreateSubjectState extends State<CreateSubjectWidget> {
                 _subject.name = value;
               });
             },
+            initialValue: _subject.name,
           ),
           _createTextFormField(
             labelText: 'Codul materiei',
@@ -108,6 +126,7 @@ class CreateSubjectState extends State<CreateSubjectWidget> {
                 _subject.code = value;
               });
             },
+            initialValue: _subject.code,
           ),
           _createTextFormField(
             labelText: 'Descrierea materiei',
@@ -118,6 +137,7 @@ class CreateSubjectState extends State<CreateSubjectWidget> {
                 _subject.description = value;
               });
             },
+            initialValue: _subject.description,
           ),
           Row(
             children: [
@@ -179,6 +199,8 @@ class CreateSubjectState extends State<CreateSubjectWidget> {
               });
             },
             keyboardType: TextInputType.number,
+            initialValue:
+                _subject.semester != null ? _subject.semester.toString() : null,
           ),
         ],
       ),
@@ -191,11 +213,13 @@ class CreateSubjectState extends State<CreateSubjectWidget> {
       Icon icon,
       bool readOnly = false,
       ValueChanged<String> onChange,
-      TextInputType keyboardType = TextInputType.text}) {
+      TextInputType keyboardType = TextInputType.text,
+      String initialValue}) {
     return Container(
       color: Colors.grey,
       child: TextFormField(
         readOnly: readOnly,
+        initialValue: initialValue,
         keyboardType: keyboardType,
         onChanged: onChange,
         decoration: InputDecoration(

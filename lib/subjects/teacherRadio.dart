@@ -6,9 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:weasylearn/representation/Subject.dart';
 import 'package:weasylearn/representation/Teacher.dart';
 import 'package:http/http.dart' as http;
-import 'package:weasylearn/subjects/subjectnotification.dart';
-
-import 'createsubject.dart';
 
 Future<List<Teacher>> fetchTeachers() async {
   final response = await http.get(
