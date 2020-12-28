@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:weasylearn/utils/sidedrawer.dart';
+import 'package:weasylearn/utils/side_drawer.dart';
 
 class UsersWidget extends StatefulWidget {
 

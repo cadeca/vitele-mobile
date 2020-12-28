@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weasylearn/representation/Subject.dart';
-import 'package:weasylearn/subjects/subjectdetails.dart';
+import 'package:weasylearn/subjects/subject_widget.dart';
 
 class SubjectRow extends StatelessWidget {
   final Subject subject;
@@ -27,7 +27,7 @@ class SubjectRow extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => SubjectDetailsWidget(subject)),
+          MaterialPageRoute(builder: (context) => SubjectWidget(subject)),
         );
       },
       child: Container(

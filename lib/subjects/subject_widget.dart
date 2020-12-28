@@ -6,25 +6,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:weasylearn/representation/Subject.dart';
-import 'package:weasylearn/subjects/teacherRadio.dart';
-import 'package:weasylearn/utils/fancyappbar.dart';
+import 'package:weasylearn/subjects/teacher_radio.dart';
+import 'package:weasylearn/utils/fancy_app_bar.dart';
 import 'package:http/http.dart' as http;
-import 'package:weasylearn/utils/sidedrawer.dart';
+import 'package:weasylearn/utils/side_drawer.dart';
 
-class SubjectDetailsWidget extends StatefulWidget {
+class SubjectWidget extends StatefulWidget {
   final Subject _subject;
 
-  SubjectDetailsWidget(this._subject);
+  SubjectWidget(this._subject);
 
   @override
   State<StatefulWidget> createState() =>
-      SubjectDetailsState(_subject != null ? _subject : Subject());
+      SubjectState(_subject != null ? _subject : Subject());
 }
 
-class SubjectDetailsState extends State<SubjectDetailsWidget> {
+class SubjectState extends State<SubjectWidget> {
   Subject _subject;
 
-  SubjectDetailsState(this._subject);
+  SubjectState(this._subject);
 
   final _formKey = GlobalKey<FormState>();
 

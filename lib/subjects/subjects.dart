@@ -6,10 +6,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:weasylearn/representation/Subject.dart';
-import 'package:weasylearn/subjects/subjectdetails.dart';
-import 'package:weasylearn/subjects/subjectrow.dart';
-import 'package:weasylearn/utils/fancyappbar.dart';
-import 'package:weasylearn/utils/sidedrawer.dart';
+import 'package:weasylearn/subjects/subject_widget.dart';
+import 'package:weasylearn/subjects/subject_row.dart';
+import 'package:weasylearn/utils/fancy_app_bar.dart';
+import 'package:weasylearn/utils/side_drawer.dart';
 
 Future<List<Subject>> fetchSubjects() async {
   final response = await http.get(
@@ -67,7 +67,7 @@ class _SubjectsWidgetState extends State<SubjectsWidget> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => SubjectDetailsWidget(null)),
+                  builder: (context) => SubjectWidget(null)),
             );
           },
         ),
