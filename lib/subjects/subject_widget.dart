@@ -6,9 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:weasylearn/representation/Subject.dart';
+import 'package:weasylearn/subjects/subjects.dart';
 import 'package:weasylearn/subjects/teacher_radio.dart';
-import 'package:weasylearn/utils/fancy_app_bar.dart';
 import 'package:http/http.dart' as http;
+import 'package:weasylearn/utils/service/auth_service.dart';
 import 'package:weasylearn/utils/side_drawer.dart';
 
 class SubjectWidget extends StatefulWidget {
@@ -71,8 +72,12 @@ class SubjectState extends State<SubjectWidget> {
                       FlatButton(
                         child: Text('Ok'),
                         onPressed: () {
-                          Navigator.of(context)
-                              .popUntil((route) => route.isFirst);
+                          Navigator.of(context, rootNavigator: true).pop();
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SubjectsWidget()),
+                          );
                         },
                       ),
                     ],
@@ -247,15 +252,14 @@ class SubjectState extends State<SubjectWidget> {
   }
 
   Future<Response> _createSubject(Subject subject) async {
+    final authResponse = await AuthService.getInstance().authenticate();
     final response = await http.post(
       'http://10.0.2.2:2020/api/subject',
       body: jsonEncode(subject.toJson()),
       headers: {
         'Accept': 'application/json',
         'content-type': 'application/json',
-        HttpHeaders.authorizationHeader: base64Encode(
-          utf8.encode('admin:admin'),
-        ),
+        HttpHeaders.authorizationHeader: 'Bearer $authResponse.accessToken'
       },
     );
     return response;

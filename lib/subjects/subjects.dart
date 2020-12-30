@@ -3,21 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:weasylearn/representation/Subject.dart';
 import 'package:weasylearn/subjects/subject_widget.dart';
 import 'package:weasylearn/subjects/subject_row.dart';
-import 'package:weasylearn/utils/fancy_app_bar.dart';
+import 'package:weasylearn/utils/service/auth_service.dart';
 import 'package:weasylearn/utils/side_drawer.dart';
 
 Future<List<Subject>> fetchSubjects() async {
+  final authResponse = await AuthService.getInstance().authenticate();
   final response = await http.get(
     'http://10.0.2.2:2020/api/subject',
     headers: {
-      HttpHeaders.authorizationHeader: base64Encode(
-        utf8.encode("teacher:teacher"),
-      ),
+      'Authorization': 'Bearer ' + authResponse.accessToken
     },
   );
   final Iterable responseJson = jsonDecode(response.body);

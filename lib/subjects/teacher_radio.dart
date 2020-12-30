@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:weasylearn/representation/Subject.dart';
 import 'package:weasylearn/representation/Teacher.dart';
 import 'package:http/http.dart' as http;
+import 'package:weasylearn/utils/service/auth_service.dart';
 
 Future<List<Teacher>> fetchTeachers() async {
+  final authResponse = await AuthService.getInstance().authenticate();
   final response = await http.get(
     'http://10.0.2.2:2020/api/user/teachers',
     headers: {
-      HttpHeaders.authorizationHeader: base64Encode(
-        utf8.encode("admin:admin"),
-      ),
+      'Authorization': 'Bearer ' + authResponse.accessToken
     },
   );
   final Iterable responseJson = jsonDecode(response.body);
