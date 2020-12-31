@@ -79,7 +79,14 @@ class _SubjectsWidgetState extends State<SubjectsWidget> {
             snapshot.error.toString(),
           );
         }
-        return CircularProgressIndicator();
+        return Column(
+          children: [
+            SizedBox(height: 250.0),
+            Center(
+              child: CircularProgressIndicator(),
+            ),
+          ],
+        );
       },
     );
   }
@@ -123,4 +130,5 @@ class _SubjectsWidgetState extends State<SubjectsWidget> {
         .toList();
     return subjects;
   }
+
 }

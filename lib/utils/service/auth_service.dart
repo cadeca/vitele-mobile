@@ -13,6 +13,8 @@ class AuthService {
 
   bool isAdmin = false;
 
+  Map<String, dynamic> userInfo;
+
   AuthService._();
 
   static AuthService getInstance() {
@@ -48,6 +50,7 @@ class AuthService {
       ));
     }
     secureStorage.write(key: 'refresh_token', value: result.refreshToken);
+    userInfo = parseIdToken(result.idToken);
     final parsedAccessToken = parseIdToken(result.accessToken);
     isAdmin = (parsedAccessToken['resource_access']['weasylearn-be']['roles'] as List).contains('Admin');
     return result;
@@ -55,6 +58,18 @@ class AuthService {
 
   void logout() async{
     await secureStorage.delete(key: 'refresh_token');
+  }
+
+  String getUsername() {
+    return userInfo['preferred_username'];
+  }
+
+  String getName() {
+    return userInfo['family_name'];
+  }
+
+  String getSurname() {
+    return userInfo['given_name'];
   }
 
   static Map<String, dynamic> parseIdToken(String idToken) {
