@@ -11,6 +11,7 @@ class LoginApp extends StatefulWidget {
 }
 
 class _LoginAppState extends State<LoginApp> {
+
   final AuthService authService = AuthService.getInstance();
 
   @override

@@ -10,9 +10,11 @@ import 'package:weasylearn/subjects/subjects.dart';
 import 'package:weasylearn/subjects/teacher_radio.dart';
 import 'package:http/http.dart' as http;
 import 'package:weasylearn/utils/service/auth_service.dart';
+import 'package:weasylearn/utils/service/custom_form_field.dart';
 import 'package:weasylearn/utils/side_drawer.dart';
 
 class SubjectWidget extends StatefulWidget {
+
   final Subject _subject;
 
   SubjectWidget(this._subject);
@@ -111,7 +113,7 @@ class SubjectState extends State<SubjectWidget> {
       key: _formKey,
       child: Column(
         children: [
-          _createTextFormField(
+          CustomTextFormField(
             labelText: 'Numele materiei',
             validateText: 'Numele nu poate fi gol!',
             icon: Icon(Icons.subject),
@@ -122,7 +124,7 @@ class SubjectState extends State<SubjectWidget> {
             },
             initialValue: _subject.name,
           ),
-          _createTextFormField(
+          CustomTextFormField(
             labelText: 'Codul materiei',
             validateText: 'Codul nu poate fi gol!',
             icon: Icon(Icons.code),
@@ -133,7 +135,7 @@ class SubjectState extends State<SubjectWidget> {
             },
             initialValue: _subject.code,
           ),
-          _createTextFormField(
+          CustomTextFormField(
             labelText: 'Descrierea materiei',
             validateText: 'Descrierea nu poate fi goala!',
             icon: Icon(Icons.description),
@@ -194,7 +196,7 @@ class SubjectState extends State<SubjectWidget> {
               ),
             ],
           ),
-          _createTextFormField(
+          CustomTextFormField(
             labelText: 'Semestrul',
             validateText: 'Semestrul nu poate fi gol!',
             icon: Icon(Icons.access_time),
@@ -207,45 +209,6 @@ class SubjectState extends State<SubjectWidget> {
             initialValue:
                 _subject.semester != null ? _subject.semester.toString() : null,
           ),
-        ],
-      ),
-    );
-  }
-
-  Container _createTextFormField(
-      {String labelText,
-      String validateText,
-      Icon icon,
-      bool readOnly = false,
-      ValueChanged<String> onChange,
-      TextInputType keyboardType = TextInputType.text,
-      String initialValue}) {
-    return Container(
-      color: Colors.grey,
-      child: TextFormField(
-        readOnly: readOnly,
-        initialValue: initialValue,
-        keyboardType: keyboardType,
-        onChanged: onChange,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.only(top: 10, bottom: 10),
-          isDense: true,
-          labelText: labelText,
-          prefixIcon: Padding(
-            padding: EdgeInsets.only(top: 15),
-            child: icon,
-          ),
-        ),
-        validator: (value) {
-          if (value.isEmpty) {
-            return validateText;
-          }
-          return null;
-        },
-        inputFormatters: [
-          keyboardType == TextInputType.number
-              ? FilteringTextInputFormatter.allow(RegExp('[12345678]'))
-              : FilteringTextInputFormatter.singleLineFormatter,
         ],
       ),
     );

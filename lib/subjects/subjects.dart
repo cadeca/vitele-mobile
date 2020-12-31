@@ -10,20 +10,6 @@ import 'package:weasylearn/subjects/subject_row.dart';
 import 'package:weasylearn/utils/service/auth_service.dart';
 import 'package:weasylearn/utils/side_drawer.dart';
 
-Future<List<Subject>> fetchSubjects() async {
-  final authResponse = await AuthService.getInstance().authenticate();
-  final response = await http.get(
-    'http://10.0.2.2:2020/api/subject',
-    headers: {
-      'Authorization': 'Bearer ' + authResponse.accessToken
-    },
-  );
-  final Iterable responseJson = jsonDecode(response.body);
-  List<Subject> subjects =
-      List.from(responseJson).map((model) => Subject.fromJson(model)).toList();
-  return subjects;
-}
-
 class SubjectsWidget extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -32,6 +18,8 @@ class SubjectsWidget extends StatefulWidget {
 }
 
 class _SubjectsWidgetState extends State<SubjectsWidget> {
+  final AuthService authService = AuthService.getInstance();
+
   List<Subject> subjects;
 
   _SubjectsWidgetState({this.subjects});
@@ -59,16 +47,22 @@ class _SubjectsWidgetState extends State<SubjectsWidget> {
             _subjectsData(),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => SubjectWidget(null)),
-            );
-          },
-        ),
+        floatingActionButton: getAddButton(),
+      ),
+    );
+  }
+
+  Widget getAddButton() {
+    return Visibility(
+      visible: authService.isAdmin,
+      child: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SubjectWidget(null)),
+          );
+        },
       ),
     );
   }
@@ -115,5 +109,18 @@ class _SubjectsWidgetState extends State<SubjectsWidget> {
         ),
       ),
     );
+  }
+
+  Future<List<Subject>> fetchSubjects() async {
+    final authResponse = await authService.authenticate();
+    final response = await http.get(
+      'http://10.0.2.2:2020/api/subject',
+      headers: {'Authorization': 'Bearer ' + authResponse.accessToken},
+    );
+    final Iterable responseJson = jsonDecode(response.body);
+    List<Subject> subjects = List.from(responseJson)
+        .map((model) => Subject.fromJson(model))
+        .toList();
+    return subjects;
   }
 }

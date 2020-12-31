@@ -11,6 +11,8 @@ class AuthService {
 
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
 
+  bool isAdmin = false;
+
   AuthService._();
 
   static AuthService getInstance() {
@@ -46,10 +48,14 @@ class AuthService {
       ));
     }
     secureStorage.write(key: 'refresh_token', value: result.refreshToken);
+    final parsedAccessToken = parseIdToken(result.accessToken);
+    isAdmin = (parsedAccessToken['resource_access']['weasylearn-be']['roles'] as List).contains('Admin');
     return result;
   }
 
-
+  void logout() async{
+    await secureStorage.delete(key: 'refresh_token');
+  }
 
   static Map<String, dynamic> parseIdToken(String idToken) {
     final parts = idToken.split(r'.');

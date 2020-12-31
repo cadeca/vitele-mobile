@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:weasylearn/settings/settings.dart';
 import 'package:weasylearn/subjects/subjects.dart';
 import 'package:weasylearn/users/users.dart';
+import 'package:weasylearn/utils/service/auth_service.dart';
 
 class SideDrawer extends StatelessWidget {
+
+  final AuthService authService = AuthService.getInstance();
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -53,21 +57,36 @@ class SideDrawer extends StatelessWidget {
                 );
               },
             ),
-            ListTile(
-              title: Text(
-                'Utilizatori',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 17.0,
+            Visibility(
+              visible: authService.isAdmin,
+              child: ListTile(
+                title: Text(
+                  'Utilizatori',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 17.0,
+                  ),
                 ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => UsersWidget()),
+                  );
+                },
               ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => UsersWidget()),
-                );
-              },
             ),
+            ListTile(
+                title: Text(
+                  'Deconectare',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 17.0,
+                  ),
+                ),
+                onTap: () {
+                  authService.logout();
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                }),
           ],
         ),
       ),
