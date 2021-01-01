@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:weasylearn/representation/Subject.dart';
+import 'package:weasylearn/subjects/schedule_row.dart';
 import 'package:weasylearn/subjects/subject_widget.dart';
 import 'package:weasylearn/subjects/subject_row.dart';
 import 'package:weasylearn/utils/service/auth_service.dart';
@@ -100,6 +101,70 @@ class _SubjectsWidgetState extends State<SubjectsWidget> {
         child: CustomScrollView(
           scrollDirection: Axis.vertical,
           slivers: <Widget>[
+            SliverToBoxAdapter(
+              child: Container(
+                height: 130,
+                child: ListView(
+                  children: [
+                    ScheduleRow(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 15.0,
+                          ),
+                          Text(
+                            'Teme pentru saptamana asta: 0',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ScheduleRow(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 15.0,
+                          ),
+                          Text(
+                            'Teste saptamana asta: 0',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ScheduleRow(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 15.0,
+                          ),
+                          Text(
+                            'Examene saptamana asta: 0',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                  scrollDirection: Axis.horizontal,
+                ),
+              ),
+            ),
             SliverPadding(
               padding: EdgeInsets.symmetric(vertical: 24.0),
               sliver: SliverFixedExtentList(
@@ -130,5 +195,4 @@ class _SubjectsWidgetState extends State<SubjectsWidget> {
         .toList();
     return subjects;
   }
-
 }

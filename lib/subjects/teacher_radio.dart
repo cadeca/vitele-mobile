@@ -40,7 +40,7 @@ class _TeacherRadioState extends State<TeacherRadio> {
     return _teachersData();
   }
 
-  FutureBuilder _teachersData() {
+  FutureBuilder _teachersData() {//TODO: Cache teachers to avoid api loading times
     return FutureBuilder<List<Teacher>>(
       future: fetchTeachers(),
       builder: (BuildContext context, AsyncSnapshot<List<Teacher>> snapshot) {
