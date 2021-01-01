@@ -85,7 +85,7 @@ class SideDrawer extends StatelessWidget {
                 ),
                 onTap: () {
                   authService.logout();
-                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.of(context, rootNavigator: true).popUntil((route) => route.isFirst);
                 }),
           ],
         ),

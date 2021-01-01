@@ -1,9 +1,9 @@
-import 'dart:convert';
-
 import 'package:camera/camera.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_appauth/flutter_appauth.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
 import 'package:weasylearn/utils/service/auth_service.dart';
 import 'package:weasylearn/utils/service/custom_form_field.dart';
 import 'package:weasylearn/utils/side_drawer.dart';
@@ -16,6 +16,10 @@ class SettingsWidget extends StatefulWidget {
 }
 
 class SettingsState extends State<SettingsWidget> {
+  Dio dio = Dio();
+
+  final ImagePicker imagePicker = ImagePicker();
+
   final AuthService authService = AuthService.getInstance();
 
   @override
@@ -54,7 +58,7 @@ class SettingsState extends State<SettingsWidget> {
                 SizedBox(height: 100.0),
                 GestureDetector(
                   onTap: () {
-                    uploadPicture();
+                    _showPicker(context);
                   },
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(100.0),
@@ -115,10 +119,55 @@ class SettingsState extends State<SettingsWidget> {
           );
   }
 
-  void uploadPicture() async{
-    WidgetsFlutterBinding.ensureInitialized();
-    final cameras = await availableCameras();
-    final firstCamera = cameras.first;
+  void _uploadImg(ImageSource source) async {
+    final authResponse = await authService.authenticate();
+    final requestURL = 'http://10.0.2.2:2020/api/user/profile/image';
+    PickedFile image = await imagePicker.getImage(
+      source: source,
+      imageQuality: 50,
+    );
+    FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(image.path,
+          filename: basename(image.path))
+    });
+    final response = await dio.post(
+      requestURL,
+      data: formData,
+      options: Options(
+        headers: {'Authorization': 'Bearer ' + authResponse.accessToken},
+      ),
+    );
+    setState(() {});
   }
 
+  void _showPicker(context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return SafeArea(
+          child: Container(
+            child: new Wrap(
+              children: <Widget>[
+                new ListTile(
+                    leading: new Icon(Icons.photo_library),
+                    title: new Text('Galerie'),
+                    onTap: () {
+                      _uploadImg(ImageSource.gallery);
+                      Navigator.of(context).pop();
+                    }),
+                new ListTile(
+                  leading: new Icon(Icons.photo_camera),
+                  title: new Text('Camera'),
+                  onTap: () {
+                    _uploadImg(ImageSource.camera);
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

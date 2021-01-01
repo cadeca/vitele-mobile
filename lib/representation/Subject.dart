@@ -33,6 +33,7 @@ class Subject {
       'description': description,
       'semester': semester,
       'teacher': teacher.username,
+      'id': id
     };
   }
 }

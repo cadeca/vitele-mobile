@@ -184,7 +184,7 @@ class SubjectState extends State<SubjectWidget> {
                             FlatButton(
                               child: Text('Ok'),
                               onPressed: () {
-                                Navigator.of(context).pop();
+                                Navigator.of(context, rootNavigator: true).pop();
                               },
                             ),
                           ],
@@ -216,13 +216,13 @@ class SubjectState extends State<SubjectWidget> {
 
   Future<Response> _createSubject(Subject subject) async {
     final authResponse = await AuthService.getInstance().authenticate();
-    final response = await http.post(
+    final response = await http.patch(
       'http://10.0.2.2:2020/api/subject',
       body: jsonEncode(subject.toJson()),
       headers: {
         'Accept': 'application/json',
         'content-type': 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer $authResponse.accessToken'
+        HttpHeaders.authorizationHeader: 'Bearer ' + authResponse.accessToken
       },
     );
     return response;

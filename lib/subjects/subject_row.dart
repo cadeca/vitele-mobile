@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:weasylearn/representation/Subject.dart';
 import 'package:weasylearn/subjects/subject_widget.dart';
+import 'package:weasylearn/utils/service/auth_service.dart';
 
 class SubjectRow extends StatelessWidget {
+  final AuthService authService = AuthService.getInstance();
+
   final Subject subject;
 
   SubjectRow({this.subject});
@@ -25,10 +28,12 @@ class SubjectRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SubjectWidget(subject)),
-        );
+        if (authService.isAdmin) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SubjectWidget(subject)),
+          );
+        }
       },
       child: Container(
         height: 90.0,
