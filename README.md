@@ -1,16 +1,27 @@
 # weasylearn
 
-A new Flutter project.
+An app for the weasylearn server.
 
-## Getting Started
+## Features
+- Adding subjects
+- Editing subjects
+- Changing the profile picture
+- Secure authentication using 0Auth2 keycloak
 
-This project is a starting point for a Flutter application.
+## Frameworks
+- Flutter
+- Spring
 
-A few resources to get you started if this is your first Flutter project:
+## Programming languages
+- Dart
+- Kotlin
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Technologies used
+- Mongo
+- HTTP Requests
+- Keycloak
+- Gradle
+- Docker
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Goals
+ My personal goal for this project was to learn working with Flutter with no experiences other than some limited Android experience. **Succeeded**
